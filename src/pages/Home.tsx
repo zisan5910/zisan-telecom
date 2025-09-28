@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { TopNavigation, BottomNavigation } from '@/components/Navigation';
 import { CategoryScroll } from '@/components/CategoryScroll';
 import { ProductCard } from '@/components/ProductCard';
+import { ScrollToTopButton } from '@/components/ScrollToTopButton';
 import { products, categories } from '@/data/products';
 
 const Home: React.FC = () => {
@@ -54,6 +55,7 @@ const Home: React.FC = () => {
         </section>
       </main>
 
+      <ScrollToTopButton />
       <BottomNavigation />
     </div>
   );

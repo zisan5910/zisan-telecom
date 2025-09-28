@@ -30,7 +30,7 @@ const Wishlist: React.FC = () => {
               <div className="grid grid-cols-1 gap-4">
                 {wishlist.map((product) => (
                   <div key={product.id} className="bg-card rounded-lg p-4 card-shadow">
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 cursor-pointer" onClick={() => window.location.href = `/product/${product.id}`}>
                       {/* Product Image */}
                       <div className="relative">
                         <img
@@ -43,7 +43,7 @@ const Wishlist: React.FC = () => {
                       {/* Product Details */}
                       <div className="flex-1 space-y-3">
                         <div className="space-y-1">
-                          <h3 className="font-inter font-bold text-foreground text-base">
+                          <h3 className="font-inter font-bold text-foreground text-base hover:text-primary transition-colors">
                             {product.name}
                           </h3>
                           <p className="text-primary font-bold text-lg">
@@ -54,7 +54,8 @@ const Wishlist: React.FC = () => {
                         {/* Actions */}
                         <div className="flex items-center gap-3">
                           <Button
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               const googleFormUrl = 'https://forms.gle/9UZ8MYz8zXFyifPG6';
                               const formData = `Product: ${product.name}\nQuantity: 1\nPrice: ৳${product.price}\nProduct ID: ${product.id}`;
                               // Copy details to clipboard
@@ -63,14 +64,18 @@ const Wishlist: React.FC = () => {
                               });
                               window.open(`${googleFormUrl}?entry.1000000=${encodeURIComponent(formData)}`, '_blank');
                             }}
-                            className="flex-1 bg-primary hover:bg-primary-hover text-primary-foreground"
+                            className="flex-1 bg-primary hover:bg-primary-hover text-primary-foreground md:text-sm"
+                            size="sm"
                           >
                             Buy Now
                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => addToCart(product)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              addToCart(product);
+                            }}
                             className="border-primary text-primary hover:bg-primary hover:text-primary-foreground p-2"
                           >
                             <ShoppingCart className="h-4 w-4" />
@@ -78,7 +83,10 @@ const Wishlist: React.FC = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => removeFromWishlist(product.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeFromWishlist(product.id);
+                            }}
                             className="text-danger hover:text-danger p-2"
                           >
                             <Heart className="h-4 w-4 fill-current" />

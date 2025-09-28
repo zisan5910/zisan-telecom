@@ -49,7 +49,7 @@ const Cart: React.FC = () => {
                 
                 {cart.map((item) => (
                   <div key={item.id} className="bg-card rounded-lg p-4 card-shadow">
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 cursor-pointer" onClick={() => window.location.href = `/product/${item.id}`}>
                       {/* Product Image */}
                       <div className="relative">
                         <img
@@ -62,7 +62,7 @@ const Cart: React.FC = () => {
                       {/* Product Details */}
                       <div className="flex-1 space-y-3">
                         <div className="space-y-1">
-                          <h3 className="font-inter font-bold text-foreground text-base">
+                          <h3 className="font-inter font-bold text-foreground text-base hover:text-primary transition-colors">
                             {item.name}
                           </h3>
                           <p className="text-primary font-bold text-lg">
@@ -76,7 +76,10 @@ const Cart: React.FC = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                updateQuantity(item.id, item.quantity - 1);
+                              }}
                               className="h-8 w-8 p-0"
                             >
                               <Minus className="h-3 w-3" />
@@ -85,7 +88,10 @@ const Cart: React.FC = () => {
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                updateQuantity(item.id, item.quantity + 1);
+                              }}
                               className="h-8 w-8 p-0"
                             >
                               <Plus className="h-3 w-3" />
@@ -96,7 +102,8 @@ const Cart: React.FC = () => {
                         {/* Actions */}
                         <div className="flex items-center gap-3">
                           <Button
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               const googleFormUrl = 'https://forms.gle/9UZ8MYz8zXFyifPG6';
                               const formData = `Product: ${item.name}\nQuantity: ${item.quantity}\nPrice: ৳${item.price}\nProduct ID: ${item.id}`;
                               // Copy details to clipboard
@@ -105,14 +112,18 @@ const Cart: React.FC = () => {
                               });
                               window.open(`${googleFormUrl}?entry.1000000=${encodeURIComponent(formData)}`, '_blank');
                             }}
-                            className="flex-1 bg-primary hover:bg-primary-hover text-primary-foreground"
+                            className="flex-1 bg-primary hover:bg-primary-hover text-primary-foreground md:text-sm"
+                            size="sm"
                           >
                             Buy Now
                           </Button>
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => addToWishlist(item)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              addToWishlist(item);
+                            }}
                             className={`p-2 ${
                               isInWishlist(item.id)
                                 ? 'text-danger hover:text-danger'
@@ -124,7 +135,10 @@ const Cart: React.FC = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => removeFromCart(item.id)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeFromCart(item.id);
+                            }}
                             className="text-danger hover:text-danger p-2"
                           >
                             <Trash2 className="h-4 w-4" />
