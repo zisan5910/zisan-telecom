@@ -13,7 +13,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Filter, X, SlidersHorizontal, Search as SearchIcon, Grid, List } from 'lucide-react';
+import { Filter, X, SlidersHorizontal, Search as SearchIcon, Grid2x2 as Grid, List } from 'lucide-react';
 
 const Search: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
