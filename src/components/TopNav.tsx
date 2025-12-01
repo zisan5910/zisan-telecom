@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Leaf, Info, Handshake, ClipboardList, Package } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
+import { ArrowLeft } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 
 interface TopNavProps {
@@ -11,13 +10,11 @@ interface TopNavProps {
   icon?: LucideIcon;
 }
 
-const TopNav: React.FC<TopNavProps> = ({ title, showBack = true, showCart = false, icon: Icon }) => {
+const TopNav: React.FC<TopNavProps> = ({ title, showBack = true, icon: Icon }) => {
   const navigate = useNavigate();
-  const { getTotalItems } = useCart();
-  const totalItems = getTotalItems();
 
   return (
-    <header className="sticky top-0 z-40 bg-card/95 backdrop-blur-lg border-b border-border">
+    <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
       <div className="flex items-center justify-between h-14 px-4 max-w-7xl mx-auto">
         <div className="flex items-center gap-3">
           {showBack && (
@@ -35,20 +32,6 @@ const TopNav: React.FC<TopNavProps> = ({ title, showBack = true, showCart = fals
           )}
           <h1 className="text-lg font-semibold text-foreground truncate">{title}</h1>
         </div>
-        
-        {showCart && (
-          <button
-            onClick={() => navigate('/cart')}
-            className="relative w-9 h-9 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
-          >
-            <ShoppingCart className="w-5 h-5 text-foreground" />
-            {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs font-bold rounded-full flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </button>
-        )}
       </div>
     </header>
   );

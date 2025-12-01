@@ -1,0 +1,19 @@
+{
+  "name": "বিনিময়",
+  "short_name": "বিনিময়",
+  "description": "আপনার বিশ্বস্ত ট্রেডিং পার্টনার - গ্যাস সিলিন্ডার, সিমেন্ট, মোবাইল, ইলেকট্রনিক্স সহ সকল ধরনের পণ্য",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2d9d5c",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["shopping", "business"],
+  "lang": "bn"
+}
