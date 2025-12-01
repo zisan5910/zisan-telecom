@@ -1,8 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ShoppingCart, SlidersHorizontal, Leaf, ShoppingBag } from 'lucide-react';
+import { ShoppingCart, Heart, SlidersHorizontal, Grid3X3 } from 'lucide-react';
 import { products, categories } from '@/data/products';
 import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import BottomNav from '@/components/BottomNav';
 import HamburgerMenu from '@/components/HamburgerMenu';
 import SearchBar from '@/components/SearchBar';
@@ -20,6 +21,7 @@ import {
 const Index: React.FC = () => {
   const navigate = useNavigate();
   const { getTotalItems } = useCart();
+  const { items: wishlistItems } = useWishlist();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('default');
@@ -60,29 +62,37 @@ const Index: React.FC = () => {
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-card/95 backdrop-blur-lg border-b border-border">
+      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
         <div className="px-4 py-3 max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <HamburgerMenu />
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Leaf className="w-5 h-5 text-primary" />
-                </div>
-                <span className="text-lg font-bold text-gradient hidden sm:block">অর্গানিক শপ</span>
-              </div>
+              <span className="text-xl font-bold text-primary">বিনিময়</span>
             </div>
-            <button
-              onClick={() => navigate('/cart')}
-              className="relative w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
-            >
-              <ShoppingCart className="w-5 h-5 text-foreground" />
-              {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs font-bold rounded-full flex items-center justify-center animate-bounce-in">
-                  {totalItems}
-                </span>
-              )}
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => navigate('/wishlist')}
+                className="relative w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+              >
+                <Heart className="w-5 h-5 text-foreground" />
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-destructive text-destructive-foreground text-xs font-bold rounded-full flex items-center justify-center animate-bounce-in">
+                    {wishlistItems.length}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => navigate('/cart')}
+                className="relative w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+              >
+                <ShoppingCart className="w-5 h-5 text-foreground" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs font-bold rounded-full flex items-center justify-center animate-bounce-in">
+                    {totalItems}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
           <SearchBar value={searchQuery} onChange={setSearchQuery} />
         </div>
@@ -95,17 +105,23 @@ const Index: React.FC = () => {
         {/* Categories */}
         <section>
           <h2 className="text-base font-semibold text-foreground mb-3">ক্যাটাগরি</h2>
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+          <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`flex flex-col items-center justify-center min-w-[72px] p-3 rounded-xl transition-all duration-300 ${
-                !selectedCategory
-                  ? "bg-primary text-primary-foreground shadow-glow scale-105"
-                  : "bg-card hover:bg-secondary shadow-soft"
-              }`}
+              className="flex flex-col items-center justify-center min-w-[70px] py-2"
             >
-              <ShoppingBag className={`w-6 h-6 mb-1 ${!selectedCategory ? "text-primary-foreground" : "text-primary"}`} />
-              <span className="text-xs font-medium whitespace-nowrap">সব</span>
+              <div
+                className={`w-14 h-14 rounded-full flex items-center justify-center mb-1.5 transition-all duration-300 border-2 ${
+                  !selectedCategory
+                    ? "border-primary bg-primary shadow-glow scale-110"
+                    : "border-transparent bg-secondary hover:border-primary/30"
+                }`}
+              >
+                <Grid3X3 className={`w-6 h-6 ${!selectedCategory ? "text-primary-foreground" : "text-foreground"}`} />
+              </div>
+              <span className={`text-xs font-medium whitespace-nowrap ${!selectedCategory ? "text-primary font-semibold" : "text-foreground"}`}>
+                সব
+              </span>
             </button>
             {categories.map((category) => (
               <CategoryCard
@@ -124,7 +140,7 @@ const Index: React.FC = () => {
             সব পণ্য ({filteredProducts.length})
           </h2>
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-36 h-9 bg-card border-border">
+            <SelectTrigger className="w-36 h-9 bg-card border-border rounded-xl">
               <SlidersHorizontal className="w-4 h-4 mr-2" />
               <SelectValue placeholder="সর্ট করুন" />
             </SelectTrigger>

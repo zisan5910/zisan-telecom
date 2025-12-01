@@ -1,147 +1,157 @@
-import React from 'react';
-import { Phone, MessageCircle, Facebook, FileText, Copy, Check, ClipboardList } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone, MessageCircle, Copy, Check, ClipboardList } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { locations, formatPrice, toBengaliNumber } from '@/data/products';
 import TopNav from '@/components/TopNav';
 import BottomNav from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Order: React.FC = () => {
-  const { items, getCartSummary } = useCart();
-  const [copied, setCopied] = React.useState(false);
+  const { items, getTotalPrice } = useCart();
+  const [copied, setCopied] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<string>('dhunat');
 
-  const orderSummary = getCartSummary();
+  const location = locations.find(l => l.id === selectedLocation);
+  const deliveryCharge = location?.deliveryCharge || 0;
+  const subtotal = getTotalPrice();
+  const total = subtotal + deliveryCharge;
 
+  // Copy only product name, ID and quantity
   const copyOrderInfo = () => {
-    // Copy without price
-    const orderText = `অর্ডার তথ্য:\n${orderSummary}`;
+    const orderText = items.map(item => 
+      `${item.name} (ID: ${item.id}) - ${toBengaliNumber(item.quantity)} পিস`
+    ).join('\n');
+    
     navigator.clipboard.writeText(orderText);
     setCopied(true);
-    toast.success('অর্ডার তথ্য কপি হয়েছে!', {
-      description: 'এখন যেকোনো মাধ্যমে পেস্ট করুন'
-    });
+    toast.success('অর্ডার তথ্য কপি হয়েছে!');
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const contactMethods = [
-    {
-      icon: Phone,
-      label: "সরাসরি কল করুন",
-      description: "আমাদের কল করে অর্ডার করুন",
-      href: "tel:+8801700000000",
-      color: "bg-success/10 text-success border-success/20"
-    },
-    {
-      icon: MessageCircle,
-      label: "হোয়াটসঅ্যাপে মেসেজ",
-      description: "হোয়াটসঅ্যাপে অর্ডার করুন",
-      href: `https://wa.me/8801700000000?text=${encodeURIComponent(`অর্ডার তথ্য:\n${orderSummary}`)}`,
-      color: "bg-success/10 text-success border-success/20"
-    },
-    {
-      icon: Facebook,
-      label: "ফেইসবুকে মেসেজ",
-      description: "ফেইসবুক পেজে অর্ডার করুন",
-      href: "https://m.me/organicshopbd",
-      color: "bg-info/10 text-info border-info/20"
-    }
-  ];
+  const phoneNumber = '+8801711727436';
 
   return (
     <div className="min-h-screen bg-background pb-20">
       <TopNav title="অর্ডার করুন" icon={ClipboardList} />
 
-      <main className="px-4 py-4 max-w-7xl mx-auto space-y-5">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-5">
-            {/* Order Summary */}
-            {items.length > 0 && (
-              <div className="bg-card rounded-xl p-4 shadow-soft">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-foreground">অর্ডার সামারি</h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={copyOrderInfo}
-                    className="h-8 text-xs"
-                  >
-                    {copied ? (
-                      <Check className="w-4 h-4 mr-1 text-success" />
-                    ) : (
-                      <Copy className="w-4 h-4 mr-1" />
-                    )}
-                    {copied ? 'কপি হয়েছে' : 'কপি করুন'}
-                  </Button>
-                </div>
-                <div className="space-y-2 mb-3">
-                  {items.map(item => (
-                    <div key={item.id} className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        {item.name} (ID: {item.id}) × {item.quantity}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Order Methods */}
-            <section>
-              <h3 className="text-base font-semibold text-foreground mb-3">
-                অর্ডার করতে যোগাযোগ করুন
-              </h3>
-              <div className="space-y-3">
-                {contactMethods.map((method, index) => (
-                  <a
-                    key={index}
-                    href={method.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => copyOrderInfo()}
-                    className={`flex items-center gap-4 bg-card rounded-xl p-4 shadow-soft border-2 ${method.color} hover:shadow-lg transition-all animate-fade-in`}
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <div className={`w-12 h-12 rounded-full ${method.color.split(' ')[0]} flex items-center justify-center`}>
-                      <method.icon className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">{method.label}</p>
-                      <p className="text-sm text-muted-foreground">{method.description}</p>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </section>
-          </div>
-
-          {/* Google Form */}
-          <section>
-            <div className="flex items-center gap-2 mb-3">
-              <FileText className="w-5 h-5 text-primary" />
-              <h3 className="text-base font-semibold text-foreground">
-                অথবা নিচের ফরম পূরণ করুন
-              </h3>
-            </div>
-            <div className="bg-card rounded-xl overflow-hidden shadow-soft">
-              <iframe
-                src="https://docs.google.com/forms/d/e/1FAIpQLScExample/viewform?embedded=true"
-                width="100%"
-                height="700"
-                frameBorder="0"
-                marginHeight={0}
-                marginWidth={0}
-                className="w-full"
+      <main className="px-4 py-4 max-w-lg mx-auto space-y-4">
+        {/* Order Summary at Top */}
+        {items.length > 0 && (
+          <div className="bg-card rounded-2xl p-4 shadow-soft">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-foreground">অর্ডার সামারি</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={copyOrderInfo}
+                className="h-8 text-xs rounded-xl"
               >
-                লোড হচ্ছে...
-              </iframe>
+                {copied ? (
+                  <Check className="w-4 h-4 mr-1 text-success" />
+                ) : (
+                  <Copy className="w-4 h-4 mr-1" />
+                )}
+                {copied ? 'কপি হয়েছে' : 'কপি করুন'}
+              </Button>
             </div>
-          </section>
-        </div>
+            
+            {/* Products List */}
+            <div className="space-y-2 mb-4 pb-3 border-b border-border">
+              {items.map(item => (
+                <div key={item.id} className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    {item.name} × {toBengaliNumber(item.quantity)}
+                  </span>
+                  <span className="text-foreground font-medium">{formatPrice(item.price * item.quantity)}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Location Selection */}
+            <div className="mb-4">
+              <label className="text-sm text-muted-foreground mb-2 block">ডেলিভারি এলাকা</label>
+              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                <SelectTrigger className="w-full h-10 bg-background border-border rounded-xl">
+                  <SelectValue placeholder="এলাকা সিলেক্ট করুন" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations.map(loc => (
+                    <SelectItem key={loc.id} value={loc.id}>
+                      {loc.name} {loc.deliveryCharge === 0 ? '(ফ্রি)' : `(${formatPrice(loc.deliveryCharge)})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Price Summary */}
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">সাবটোটাল</span>
+                <span className="text-foreground font-medium">{formatPrice(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">ডেলিভারি চার্জ</span>
+                <span className={deliveryCharge === 0 ? "text-success font-medium" : "text-foreground font-medium"}>
+                  {deliveryCharge === 0 ? 'ফ্রি' : formatPrice(deliveryCharge)}
+                </span>
+              </div>
+              <div className="flex justify-between text-base pt-2 border-t border-border">
+                <span className="font-semibold text-foreground">মোট</span>
+                <span className="font-bold text-primary text-lg">{formatPrice(total)}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Contact Methods */}
+        <section>
+          <h3 className="text-base font-semibold text-foreground mb-3">
+            অর্ডার করতে যোগাযোগ করুন
+          </h3>
+          <div className="space-y-3">
+            <a
+              href={`tel:${phoneNumber}`}
+              className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-soft border-2 border-success/20 hover:shadow-lg transition-all"
+            >
+              <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
+                <Phone className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <p className="font-medium text-foreground">সরাসরি কল করুন</p>
+                <p className="text-sm text-muted-foreground">+880 1711-727436</p>
+              </div>
+            </a>
+            
+            <a
+              href={`https://wa.me/8801711727436`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 bg-card rounded-2xl p-4 shadow-soft border-2 border-success/20 hover:shadow-lg transition-all"
+            >
+              <div className="w-12 h-12 rounded-full bg-success/10 flex items-center justify-center">
+                <MessageCircle className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <p className="font-medium text-foreground">হোয়াটসঅ্যাপে মেসেজ</p>
+                <p className="text-sm text-muted-foreground">দ্রুত রিপ্লাই পেতে</p>
+              </div>
+            </a>
+          </div>
+        </section>
 
         {/* Info Note */}
-        <div className="bg-secondary/50 rounded-xl p-4 text-center">
+        <div className="bg-secondary/50 rounded-2xl p-4 text-center">
           <p className="text-sm text-muted-foreground">
-            💡 যেকোনো মাধ্যমে অর্ডার করার সময় অর্ডার তথ্য স্বয়ংক্রিয়ভাবে কপি হয়ে যাবে।
+            💡 "কপি করুন" বাটনে ক্লিক করে অর্ডার তথ্য কপি করুন এবং হোয়াটসঅ্যাপে পেস্ট করুন।
           </p>
         </div>
       </main>
