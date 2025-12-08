@@ -57,10 +57,13 @@ const Seller: React.FC = () => {
       <TopNav title="বিক্রেতা" showBack={true} icon={Handshake} />
 
       <main className="px-4 py-4 max-w-7xl mx-auto space-y-5">
-        {/* Hero Section */}
-        <div className="bg-primary rounded-2xl p-6 text-primary-foreground text-center shadow-lg">
-          <h2 className="text-xl font-bold mb-3">বিক্রেতা হিসেবে যুক্ত হন</h2>
-          <p className="text-sm opacity-95 leading-relaxed">
+        {/* Hero Section - Same style as Mission */}
+        <div className="bg-accent/10 border border-accent/20 rounded-2xl p-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center mx-auto mb-4">
+            <Handshake className="w-8 h-8 text-accent" />
+          </div>
+          <h2 className="text-xl font-bold text-foreground mb-3">বিক্রেতা হিসেবে যুক্ত হন</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
             আপনার তৈরি অর্গানিক পণ্য ও হস্তশিল্প বিক্রি করে স্বাবলম্বী হন। 
             বিনিময়ের সাথে যুক্ত হয়ে নিজের ব্যবসা শুরু করুন।
           </p>
