@@ -57,21 +57,21 @@ const Order: React.FC = () => {
   const contactMethods = [
     {
       icon: Phone,
-      label: "কল",
+      label: "কল করুন",
       href: "tel:+8809638845910",
-      color: "bg-success text-white"
+      bgColor: "bg-emerald-500 hover:bg-emerald-600"
     },
     {
       icon: MessageCircle,
       label: "WhatsApp",
       href: `https://wa.me/8801712525910?text=${encodeURIComponent(`অর্ডার তথ্য:\n${orderSummary}`)}`,
-      color: "bg-[#25D366] text-white"
+      bgColor: "bg-[#25D366] hover:bg-[#1da851]"
     },
     {
       icon: Facebook,
       label: "Messenger",
       href: "https://m.me/binimoy.organic",
-      color: "bg-[#1877F2] text-white"
+      bgColor: "bg-[#1877F2] hover:bg-[#0d65d9]"
     }
   ];
 
@@ -88,7 +88,7 @@ const Order: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => copyOrderInfo()}
-            className={`w-12 h-12 rounded-full ${method.color} flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-200`}
+            className={`w-12 h-12 rounded-full ${method.bgColor} text-white flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-200`}
             title={method.label}
           >
             <method.icon className="w-5 h-5" />
